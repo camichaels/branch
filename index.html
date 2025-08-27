@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branch - Real Connections</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a4a3a 0%, #2d5a47 50%, #407a5c 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(45deg, #4ade80, #22c55e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        
+        .leaf-icon {
+            width: 45px;
+            height: 45px;
+        }
+        
+        .app-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .app-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .screen {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(34, 197, 94, 0.3);
+        }
+        
+        .btn-secondary {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            border: 2px solid rgba(34, 197, 94, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(34, 197, 94, 0.2);
+            transform: translateY(-1px);
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .input-group input, .input-group textarea, .input-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+            outline: none;
+            border-color: #22c55e;
+        }
+        
+        .back-btn {
+            background: none;
+            border: none;
+            color: #16a34a;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .back-btn:hover {
+            text-decoration: underline;
+        }
+        
+        .connection-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(248,250,252,0.9));
+            border: 1px solid rgba(34, 197, 94, 0.15);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .connection-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.25);
+        }
+        
+        .connection-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+        
+        .connection-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .connection-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0;
+            color: #1f2937;
+        }
+        
+        .connection-prompt {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-style: italic;
+        }
+        
+        .connection-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+        
+        .connection-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .connection-notes {
+            margin-top: 8px;
+            padding: 8px;
+            background: rgba(249, 250, 251, 0.8);
+            border-radius: 6px;
+            font-style: italic;
+            color: #4b5563;
+        }
+        
+        .connection-timestamp {
+            text-align: center;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(34, 197, 94, 0.1);
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        
+        .photo-input-section {
+            margin-bottom: 20px;
+        }
+        
+        .photo-input-btn {
+            width: 100%;
+            padding: 16px;
+            border: 2px dashed rgba(34, 197, 94, 0.3);
+            border-radius: 12px;
+            background: rgba(34, 197, 94, 0.05);
+            color: #16a34a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .photo-input-btn:hover {
+            border-color: rgba(34, 197, 94, 0.5);
+            background: rgba(34, 197, 94, 0.1);
+        }
+        
+        .photo-preview {
+            margin-top: 12px;
+            padding: 8px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 8px;
+            color: #16a34a;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .photo-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .prompt-card {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(16, 185, 129, 0.05));
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .prompt-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.1);
+        }
+        
+        .prompt-text {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1f2937;
+        }
+        
+        .prompt-stats {
+            font-size: 0.9rem;
+            color: #16a34a;
+        }
+        
+        .sf-map {
+            width: 100%;
+            height: 250px;
+            background-image: 
+                radial-gradient(circle at 30% 40%, rgba(59, 130, 246, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(6, 182, 212, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .sf-map::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 45% 55%, rgba(255, 255, 255, 0.1) 2px, transparent 3px),
+                radial-gradient(circle at 25% 75%, rgba(255, 255, 255, 0.1) 1px, transparent 2px),
+                radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.1) 1.5px, transparent 2.5px);
+            background-size: 100px 100px, 150px 150px, 120px 120px;
+        }
+        
+        .map-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ef4444;
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+            z-index: 2;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 2px 8px rgba(0,0,0,0.3), 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 2px 8px rgba(0,0,0,0.3), 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 2px 8px rgba(0,0,0,0.3), 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        
+        .map-overlay {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 3;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            background: rgba(34, 197, 94, 0.1);
+            border-radius: 12px;
+            padding: 4px;
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+        
+        .nav-tab.active {
+            background: white;
+            color: #16a34a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .nav-tab:not(.active) {
+            color: #6b7280;
+        }
+        
+        .success-message {
+            background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+            border: 1px solid #22c55e;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            color: #15803d;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .profile-section {
+            background: rgba(34, 197, 94, 0.05);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .profile-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        
+        .profile-handle {
+            color: #16a34a;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .location-suggestions {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 120px;
+            overflow-y: auto;
+            position: absolute;
+            width: calc(100% - 32px);
+            z-index: 10;
+        }
+        
+        .location-suggestion {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        
+        .location-suggestion:hover {
+            background: #f3f4f6;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo" onclick="showScreen('welcome-screen')">
+                <svg class="leaf-icon" viewBox="0 0 24 24" fill="#ffffff">
+                    <path d="M17.5,10L14.5,7L14.5,12.5C14.5,14.43 12.93,16 11,16C9.07,16 7.5,14.43 7.5,12.5V7L4.5,10L7.5,12.5V12.5C7.5,16.64 10.86,20 15,20C19.14,20 22.5,16.64 22.5,12.5V12.5L17.5,10Z" opacity="0.3"/>
+                    <path d="M15,4L9,4C8,4 7.24,4.81 7.24,5.8L7.24,12.5C7.24,14.43 8.81,16 10.74,16C12.67,16 14.24,14.43 14.24,12.5L14.24,5.8C14.24,4.81 15,4 15,4M17,2L9,2C6.24,2 4,4.24 4,7L4,12.5C4,16.64 7.36,20 11.5,20C15.64,20 19,16.64 19,12.5L19,7C19,4.24 16.76,2 17,2Z"/>
+                </svg>
+            </div>
+            <h1 class="app-title">Branch</h1>
+            <p class="app-subtitle">Real connections. Real moments.</p>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen">
+            <button class="btn btn-secondary" onclick="showScreen('capture-serial')">
+                Capture a Connection
+            </button>
+            <button class="btn btn-secondary" onclick="showScreen('my-grove')">
+                My Grove
+            </button>
+            <button class="btn btn-secondary" onclick="showScreen('auth-screen')">
+                Sign In / Register
+            </button>
+        </div>
+
+        <!-- Capture Serial Screen -->
+        <div id="capture-serial" class="screen hidden">
+            <button class="back-btn" onclick="showScreen('welcome-screen')">
+                ← Back
+            </button>
+            <h2 style="margin-bottom: 20px; color: #1f2937;">Enter Branch Card</h2>
+            <div class="input-group">
+                <label for="serial">Card Serial Number (XXX-XXX)</label>
+                <input type="text" id="serial" placeholder="001-000" maxlength="7">
+            </div>
+            <button class="btn btn-primary" onclick="validateSerial()">
+                Continue
+            </button>
+            <div style="margin-top: 20px; padding: 16px; background: rgba(34, 197, 94, 0.05); border-radius: 8px; border: 1px dashed rgba(34, 197, 94, 0.3);">
+                <p style="font-size: 0.9rem; color: #16a34a; text-align: center; margin-bottom: 8px; font-weight: 600;">Sample Cards for Testing:</p>
+                <p style="font-size: 0.8rem; color: #6b7280; text-align: center; line-height: 1.4;">
+                    001-000 • 002-000 • 003-000 • 004-000
+                </p>
+            </div>
+        </div>
+
+        <!-- Capture Connection Screen -->
+        <div id="capture-connection" class="screen hidden">
+            <button class="back-btn" onclick="showScreen('capture-serial')">
+                ← Back
+            </button>
+            <h2 style="margin-bottom: 8px; color: #1f2937;">New Connection</h2>
+            <div id="prompt-display" style="background: rgba(34, 197, 94, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 24px; font-style: italic; color: #16a34a;"></div>
+            
+            <div class="input-group">
+                <label for="contact-name">Name*</label>
+                <input type="text" id="contact-name" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="contact-phone">Phone Number</label>
+                <input type="tel" id="contact-phone">
+            </div>
+            
+            <div class="input-group">
+                <label for="contact-email">Email</label>
+                <input type="email" id="contact-email">
+            </div>
+            
+            <div class="input-group">
+                <label for="contact-social">Social Handle</label>
+                <input type="text" id="contact-social" placeholder="@username">
+            </div>
+            
+            <div class="input-group">
+                <div class="input-container">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" placeholder="Start typing location..." oninput="searchLocations(this.value)">
+                    <div id="location-suggestions" class="location-suggestions hidden"></div>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="notes">Notes (Optional)</label>
+                <textarea id="notes" rows="3" placeholder="What made this moment special?"></textarea>
+            </div>
+            
+            <div class="photo-input-section">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #374151;">Add Photo (Optional)</label>
+                <input type="file" id="photo-input" accept="image/*" style="display: none;" onchange="handlePhotoSelect()">
+                <button type="button" class="photo-input-btn" onclick="document.getElementById('photo-input').click()">
+                    📸 Add Photo
+                </button>
+                <div id="photo-preview" class="photo-preview hidden"></div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="saveConnection()">
+                Save Connection
+            </button>
+        </div>
+
+        <!-- Success Screen -->
+        <div id="success-screen" class="screen hidden">
+            <div class="success-message">
+                🌿 Connection Saved Successfully!
+            </div>
+            <p style="margin-bottom: 24px; text-align: center; color: #6b7280;">
+                Your new connection has been captured. They'll receive a follow-up link to learn more about Branch.
+            </p>
+            <button class="btn btn-primary" onclick="showScreen('capture-serial')">
+                Make Another Connection
+            </button>
+            <button class="btn btn-secondary" onclick="showScreen('my-grove')">
+                View My Grove
+            </button>
+        </div>
+
+        <!-- My Grove Screen -->
+        <div id="my-grove" class="screen hidden">
+            <button class="back-btn" onclick="showScreen('welcome-screen')">
+                ← Back
+            </button>
+            <h2 style="margin-bottom: 24px; color: #1f2937;">My Grove</h2>
+            
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showGroveTab('connections')">Connections</button>
+                <button class="nav-tab" onclick="showGroveTab('branches')">Branches</button>
+                <button class="nav-tab" onclick="showGroveTab('profile')">Profile</button>
+            </div>
+
+            <div id="connections-tab" class="tab-content">
+                <h3 style="margin-bottom: 16px; color: #1f2937;">My Connections</h3>
+                <div class="input-group">
+                    <input type="text" id="connection-search" placeholder="Search connections..." oninput="filterConnections(this.value)" style="margin-bottom: 20px;">
+                </div>
+                <div id="connections-list"></div>
+            </div>
+
+            <div id="branches-tab" class="tab-content hidden">
+                <h3 style="margin-bottom: 16px; color: #1f2937;">By Prompt</h3>
+                <div id="branch-maps-list">
+                    <div class="prompt-card" onclick="showPromptMap('001')">
+                        <div class="prompt-text">What's your favorite weather forecast?</div>
+                        <div class="prompt-stats">Prompt 001 • 3 connections</div>
+                    </div>
+                    <div class="prompt-card" onclick="showPromptMap('002')">
+                        <div class="prompt-text">Where do you go to just be yourself?</div>
+                        <div class="prompt-stats">Prompt 002 • 1 connection</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px; color: #1f2937;">By Individual Card</h3>
+                <div id="individual-cards">
+                    <div class="prompt-card" onclick="showCardMap('001-000')">
+                        <div class="prompt-text">Card 001-000</div>
+                        <div class="prompt-stats">2 connections made • Last used in Golden Gate Park</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="profile-tab" class="tab-content hidden">
+                <div class="profile-section">
+                    <div class="profile-name" id="profile-display-name">Alex Rivera</div>
+                    <div class="profile-handle" id="profile-display-handle">@alexr</div>
+                    <p id="profile-display-bio" style="color: #6b7280;">Loves connecting with new people and exploring the city.</p>
+                </div>
+                <button class="btn btn-secondary" onclick="editProfile()">
+                    Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <!-- Edit Profile Screen -->
+        <div id="edit-profile-screen" class="screen hidden">
+            <button class="back-btn" onclick="cancelProfileEdit()">
+                ← Cancel
+            </button>
+            <h2 style="margin-bottom: 20px; color: #1f2937;">Edit Profile</h2>
+            
+            <div class="input-group">
+                <label for="edit-name">Full Name*</label>
+                <input type="text" id="edit-name" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="edit-handle">Social Handle</label>
+                <input type="text" id="edit-handle" placeholder="@username">
+            </div>
+            
+            <div class="input-group">
+                <label for="edit-email">Email</label>
+                <input type="email" id="edit-email">
+            </div>
+            
+            <div class="input-group">
+                <label for="edit-phone">Phone Number</label>
+                <input type="tel" id="edit-phone">
+            </div>
+            
+            <div class="input-group">
+                <label for="edit-bio">About You</label>
+                <textarea id="edit-bio" rows="3" placeholder="Tell others a bit about yourself..."></textarea>
+            </div>
+            
+            <button class="btn btn-primary" onclick="saveProfile()">
+                Save Changes
+            </button>
+            <button class="btn btn-secondary" onclick="cancelProfileEdit()">
+                Cancel
+            </button>
+        </div>
+
+        <!-- Prompt Map Screen -->
+        <div id="prompt-map" class="screen hidden">
+            <button class="back-btn" onclick="showGroveTab('branches')">
+                ← Back to Branches
+            </button>
+            <h2 id="prompt-map-title" style="margin-bottom: 20px; color: #1f2937;"></h2>
+            <div id="prompt-map-container"></div>
+            <div id="prompt-connections"></div>
+        </div>
+
+        <!-- Auth Screen -->
+        <div id="auth-screen" class="screen hidden">
+            <button class="back-btn" onclick="showScreen('welcome-screen')">
+                ← Back
+            </button>
+            <h2 style="margin-bottom: 20px; color: #1f2937;">Join Branch</h2>
+            
+            <div class="input-group">
+                <label for="auth-name">Full Name*</label>
+                <input type="text" id="auth-name" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="auth-email">Email*</label>
+                <input type="email" id="auth-email" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="auth-phone">Phone Number</label>
+                <input type="tel" id="auth-phone">
+            </div>
+            
+            <div class="input-group">
+                <label for="auth-social">Social Handle</label>
+                <input type="text" id="auth-social" placeholder="@username">
+            </div>
+            
+            <div class="input-group">
+                <label for="auth-bio">About You (Optional)</label>
+                <textarea id="auth-bio" rows="3" placeholder="Tell others a bit about yourself..."></textarea>
+            </div>
+            
+            <button class="btn btn-primary" onclick="registerUser()">
+                Create Account
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let userProfile = {
+            name: "Alex Rivera",
+            handle: "@alexr", 
+            email: "alex@email.com",
+            phone: "(555) 987-6543",
+            bio: "Loves connecting with new people and exploring the city."
+        };
+
+        let selectedPhoto = null;
+
+        let connections = [
+            {
+                name: "Maria Santos",
+                phone: "(555) 123-4567",
+                email: "maria@email.com",
+                social: "@mariasantos",
+                location: "Golden Gate Park, San Francisco, CA",
+                notes: "Met while walking dogs, shared great conversation about travel",
+                prompt: "What's your dream travel getaway?",
+                serial: "004-000",
+                timestamp: "March 15, 2024 • 2:30 PM",
+                hasPhoto: true
+            },
+            {
+                name: "James Chen",
+                phone: "",
+                email: "jchen@email.com", 
+                social: "@jameschen",
+                location: "Union Square, San Francisco, CA",
+                notes: "Coffee shop encounter, loves jazz music",
+                prompt: "If you can have only one song on a desert island, what would it be?",
+                serial: "003-000",
+                timestamp: "March 12, 2024 • 11:45 AM",
+                hasPhoto: false
+            }
+        ];
+
+        const prompts = {
+            "001": "What's your favorite weather forecast?",
+            "002": "Where do you go to just be yourself?", 
+            "003": "If you can have only one song on a desert island, what would it be?",
+            "004": "What's your dream travel getaway?"
+        };
+
+        const sampleLocations = [
+            "Golden Gate Park, San Francisco, CA",
+            "Golden Gate Bridge, San Francisco, CA", 
+            "Union Square, San Francisco, CA",
+            "Dolores Park, San Francisco, CA",
+            "Fisherman's Wharf, San Francisco, CA",
+            "Mission District, San Francisco, CA",
+            "Castro District, San Francisco, CA",
+            "Chinatown, San Francisco, CA",
+            "Lombard Street, San Francisco, CA",
+            "Alcatraz Island, San Francisco, CA"
+        ];
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+            
+            if (screenId === 'my-grove') {
+                loadConnections();
+                showGroveTab('connections');
+                document.getElementById('connection-search').value = '';
+            }
+        }
+
+        function showGroveTab(tabName) {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
+            
+            document.getElementById('prompt-map').classList.add('hidden');
+            document.getElementById('my-grove').classList.remove('hidden');
+            
+            if (tabName === 'connections') {
+                document.getElementById('connection-search').value = '';
+                loadConnections();
+            }
+        }
+
+        function validateSerial() {
+            const serial = document.getElementById('serial').value;
+            const regex = /^\d{3}-\d{3}$/;
+            
+            if (!regex.test(serial)) {
+                alert('Please enter a valid serial number format (XXX-XXX)');
+                return;
+            }
+            
+            const promptId = serial.split('-')[0];
+            if (!prompts[promptId]) {
+                alert('Invalid prompt ID. Please check your card.');
+                return;
+            }
+            
+            document.getElementById('prompt-display').textContent = '"' + prompts[promptId] + '"';
+            showScreen('capture-connection');
+        }
+
+        function searchLocations(query) {
+            const suggestions = document.getElementById('location-suggestions');
+            
+            if (query.length < 2) {
+                suggestions.classList.add('hidden');
+                return;
+            }
+            
+            const matches = sampleLocations.filter(loc => 
+                loc.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 5);
+            
+            if (matches.length > 0) {
+                suggestions.innerHTML = matches.map(loc => 
+                    '<div class="location-suggestion" onclick="selectLocation(\'' + loc + '\')">' + loc + '</div>'
+                ).join('');
+                suggestions.classList.remove('hidden');
+            } else {
+                suggestions.classList.add('hidden');
+            }
+        }
+
+        function selectLocation(location) {
+            document.getElementById('location').value = location;
+            document.getElementById('location-suggestions').classList.add('hidden');
+        }
+
+        function handlePhotoSelect() {
+            const fileInput = document.getElementById('photo-input');
+            const preview = document.getElementById('photo-preview');
+            
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                selectedPhoto = file.name;
+                preview.textContent = '📷 Photo selected: ' + file.name;
+                preview.classList.remove('hidden');
+            } else {
+                selectedPhoto = null;
+                preview.classList.add('hidden');
+            }
+        }
+
+        function saveConnection() {
+            const name = document.getElementById('contact-name').value;
+            
+            if (!name) {
+                alert('Please enter the person\'s name');
+                return;
+            }
+            
+            const connection = {
+                name: name,
+                phone: document.getElementById('contact-phone').value,
+                email: document.getElementById('contact-email').value,
+                social: document.getElementById('contact-social').value,
+                location: document.getElementById('location').value,
+                notes: document.getElementById('notes').value,
+                prompt: document.getElementById('prompt-display').textContent.replace(/"/g, ''),
+                serial: document.getElementById('serial').value,
+                timestamp: new Date().toLocaleString('en-US', { 
+                    year: 'numeric', month: 'long', day: 'numeric', 
+                    hour: 'numeric', minute: '2-digit' 
+                }),
+                hasPhoto: selectedPhoto !== null
+            };
+            
+            connections.unshift(connection);
+            
+            document.getElementById('contact-name').value = '';
+            document.getElementById('contact-phone').value = '';
+            document.getElementById('contact-email').value = '';
+            document.getElementById('contact-social').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('notes').value = '';
+            document.getElementById('serial').value = '';
+            document.getElementById('photo-input').value = '';
+            document.getElementById('photo-preview').classList.add('hidden');
+            selectedPhoto = null;
+            
+            showScreen('success-screen');
+        }
+
+        function loadConnections() {
+            const list = document.getElementById('connections-list');
+            
+            if (connections.length === 0) {
+                list.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px 0;">No connections yet. Start branching out!</p>';
+                return;
+            }
+            
+            list.innerHTML = connections.map(conn => {
+                const initials = conn.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                return '<div class="connection-card">' +
+                    '<div class="connection-header">' +
+                        '<div class="connection-avatar">' + initials + '</div>' +
+                        '<div>' +
+                            '<h3 class="connection-name">' + conn.name + '</h3>' +
+                            (conn.hasPhoto ? '<span class="photo-indicator">📸 Photo</span>' : '') +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="connection-prompt">"' + conn.prompt + '"</div>' +
+                    '<div class="connection-details">' +
+                        (conn.location ? '<div class="connection-detail-item"><span>📍</span><span>' + conn.location + '</span></div>' : '') +
+                        (conn.phone ? '<div class="connection-detail-item"><span>📞</span><span>' + conn.phone + '</span></div>' : '') +
+                        (conn.email ? '<div class="connection-detail-item"><span>📧</span><span>' + conn.email + '</span></div>' : '') +
+                        (conn.social ? '<div class="connection-detail-item"><span>📱</span><span>' + conn.social + '</span></div>' : '') +
+                        (conn.notes ? '<div class="connection-notes">💭 ' + conn.notes + '</div>' : '') +
+                        '<div class="connection-timestamp">' + conn.timestamp + '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        function filterConnections(query) {
+            const list = document.getElementById('connections-list');
+            const filteredConnections = connections.filter(conn => 
+                conn.name.toLowerCase().includes(query.toLowerCase()) ||
+                (conn.location && conn.location.toLowerCase().includes(query.toLowerCase())) ||
+                (conn.notes && conn.notes.toLowerCase().includes(query.toLowerCase())) ||
+                (conn.prompt && conn.prompt.toLowerCase().includes(query.toLowerCase()))
+            );
+            
+            if (filteredConnections.length === 0 && query.length > 0) {
+                list.innerHTML = '<p style="text-align: center; color: #6b7280; padding: 40px 0;">No connections found matching your search.</p>';
+                return;
+            }
+            
+            if (query.length === 0) {
+                loadConnections();
+                return;
+            }
+            
+            list.innerHTML = filteredConnections.map(conn => {
+                const initials = conn.name.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                return '<div class="connection-card">' +
+                    '<div class="connection-header">' +
+                        '<div class="connection-avatar">' + initials + '</div>' +
+                        '<div>' +
+                            '<h3 class="connection-name">' + conn.name + '</h3>' +
+                            (conn.hasPhoto ? '<span class="photo-indicator">📸 Photo</span>' : '') +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="connection-prompt">"' + conn.prompt + '"</div>' +
+                    '<div class="connection-details">' +
+                        (conn.location ? '<div class="connection-detail-item"><span>📍</span><span>' + conn.location + '</span></div>' : '') +
+                        (conn.phone ? '<div class="connection-detail-item"><span>📞</span><span>' + conn.phone + '</span></div>' : '') +
+                        (conn.email ? '<div class="connection-detail-item"><span>📧</span><span>' + conn.email + '</span></div>' : '') +
+                        (conn.social ? '<div class="connection-detail-item"><span>📱</span><span>' + conn.social + '</span></div>' : '') +
+                        (conn.notes ? '<div class="connection-notes">💭 ' + conn.notes + '</div>' : '') +
+                        '<div class="connection-timestamp">' + conn.timestamp + '</div>' +
+                    '</div>' +
+                '</div>';
+            }).join('');
+        }
+
+        function showPromptMap(promptId) {
+            document.getElementById('my-grove').classList.add('hidden');
+            document.getElementById('prompt-map').classList.remove('hidden');
+            
+            const promptText = prompts[promptId];
+            document.getElementById('prompt-map-title').textContent = '"' + promptText + '"';
+            
+            const mapContainer = document.getElementById('prompt-map-container');
+            const mapPoints = getMapPointsForPrompt(promptId);
+            
+            mapContainer.innerHTML = '<div class="sf-map">' +
+                mapPoints.map(point => '<div class="map-point" style="left: ' + point.x + '%; top: ' + point.y + '%; animation-delay: ' + Math.random() * 2 + 's;"></div>').join('') +
+                '<div class="map-overlay">San Francisco Bay Area</div>' +
+                '</div>';
+            
+            const promptConnections = connections.filter(conn => conn.prompt === promptText);
+            
+            document.getElementById('prompt-connections').innerHTML = 
+                '<h3 style="margin-bottom: 16px; color: #1f2937;">Recent Connections (' + (promptConnections.length + Math.floor(Math.random() * 5) + 2) + ')</h3>' +
+                promptConnections.map(conn => 
+                    '<div class="connection-card">' +
+                        '<div class="connection-header">' +
+                            '<div class="connection-avatar">?</div>' +
+                            '<h3 class="connection-name">Anonymous Connection</h3>' +
+                        '</div>' +
+                        '<div class="connection-details">' +
+                            '<div class="connection-detail-item">📍 ' + (conn.location || 'Unknown Location') + '</div>' +
+                            '<div class="connection-timestamp">' + conn.timestamp + '</div>' +
+                        '</div>' +
+                    '</div>'
+                ).join('') +
+                '<div class="connection-card">' +
+                    '<div class="connection-header">' +
+                        '<div class="connection-avatar">?</div>' +
+                        '<h3 class="connection-name">Anonymous Connection</h3>' +
+                    '</div>' +
+                    '<div class="connection-details">' +
+                        '<div class="connection-detail-item">📍 Mission District, San Francisco, CA</div>' +
+                        '<div class="connection-timestamp">March 10, 2024 • 4:15 PM</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="connection-card">' +
+                    '<div class="connection-header">' +
+                        '<div class="connection-avatar">?</div>' +
+                        '<h3 class="connection-name">Anonymous Connection</h3>' +
+                    '</div>' +
+                    '<div class="connection-details">' +
+                        '<div class="connection-detail-item">📍 Castro District, San Francisco, CA</div>' +
+                        '<div class="connection-timestamp">March 8, 2024 • 1:20 PM</div>' +
+                    '</div>' +
+                '</div>';
+        }
+
+        function showCardMap(cardId) {
+            document.getElementById('my-grove').classList.add('hidden');
+            document.getElementById('prompt-map').classList.remove('hidden');
+            
+            document.getElementById('prompt-map-title').textContent = 'Card ' + cardId + ' Journey';
+            
+            const mapContainer = document.getElementById('prompt-map-container');
+            const mapPoints = [{x: 25, y: 50}, {x: 70, y: 35}];
+            
+            mapContainer.innerHTML = '<div class="sf-map">' +
+                mapPoints.map(point => '<div class="map-point" style="left: ' + point.x + '%; top: ' + point.y + '%; animation-delay: ' + Math.random() * 2 + 's;"></div>').join('') +
+                '<div class="map-overlay">San Francisco Bay Area</div>' +
+                '</div>';
+            
+            const cardConnections = connections.filter(conn => conn.serial === cardId);
+            
+            document.getElementById('prompt-connections').innerHTML = 
+                '<h3 style="margin-bottom: 16px; color: #1f2937;">Connections Made (' + cardConnections.length + ')</h3>' +
+                cardConnections.map(conn => 
+                    '<div class="connection-card">' +
+                        '<div class="connection-header">' +
+                            '<div class="connection-avatar">' + conn.name.split(' ').map(n => n[0]).join('').toUpperCase() + '</div>' +
+                            '<h3 class="connection-name">' + conn.name + '</h3>' +
+                        '</div>' +
+                        '<div class="connection-prompt">"' + conn.prompt + '"</div>' +
+                        '<div class="connection-details">' +
+                            '<div class="connection-detail-item">📍 ' + (conn.location || 'Unknown Location') + '</div>' +
+                            '<div class="connection-timestamp">' + conn.timestamp + '</div>' +
+                        '</div>' +
+                    '</div>'
+                ).join('') +
+                (cardConnections.length === 0 ? '<p style="color: #6b7280;">No connections recorded for this card yet.</p>' : '');
+        }
+        
+        function getMapPointsForPrompt(promptId) {
+            const patterns = {
+                '001': [{x: 25, y: 30}, {x: 60, y: 45}, {x: 40, y: 65}, {x: 75, y: 25}, {x: 35, y: 80}],
+                '002': [{x: 45, y: 35}, {x: 30, y: 70}, {x: 65, y: 55}],
+                '003': [{x: 50, y: 40}, {x: 70, y: 60}, {x: 20, y: 50}, {x: 80, y: 30}],
+                '004': [{x: 40, y: 50}, {x: 55, y: 70}, {x: 75, y: 45}, {x: 25, y: 60}, {x: 60, y: 25}]
+            };
+            return patterns[promptId] || patterns['001'];
+        }
+
+        function registerUser() {
+            const name = document.getElementById('auth-name').value;
+            const email = document.getElementById('auth-email').value;
+            
+            if (!name || !email) {
+                alert('Please fill in required fields (Name and Email)');
+                return;
+            }
+            
+            alert('Account created successfully! Welcome to Branch.');
+            showScreen('welcome-screen');
+        }
+
+        function editProfile() {
+            document.getElementById('edit-name').value = userProfile.name;
+            document.getElementById('edit-handle').value = userProfile.handle;
+            document.getElementById('edit-email').value = userProfile.email;
+            document.getElementById('edit-phone').value = userProfile.phone;
+            document.getElementById('edit-bio').value = userProfile.bio;
+            
+            showScreen('edit-profile-screen');
+        }
+        
+        function saveProfile() {
+            const name = document.getElementById('edit-name').value;
+            const handle = document.getElementById('edit-handle').value;
+            const email = document.getElementById('edit-email').value;
+            const phone = document.getElementById('edit-phone').value;
+            const bio = document.getElementById('edit-bio').value;
+            
+            if (!name) {
+                alert('Please enter your name');
+                return;
+            }
+            
+            userProfile = { name: name, handle: handle, email: email, phone: phone, bio: bio };
+            
+            document.getElementById('profile-display-name').textContent = name;
+            document.getElementById('profile-display-handle').textContent = handle;
+            document.getElementById('profile-display-bio').textContent = bio || 'No bio provided yet.';
+            
+            showScreen('my-grove');
+            showGroveTab('profile');
+            
+            alert('Profile updated successfully!');
+        }
+        
+        function cancelProfileEdit() {
+            showScreen('my-grove');
+            showGroveTab('profile');
+        }
+
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.input-container')) {
+                document.getElementById('location-suggestions').classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
